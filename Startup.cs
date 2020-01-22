@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-
 namespace aspnetapp
 {
   public class Startup
@@ -22,7 +21,6 @@ namespace aspnetapp
     {
       Configuration = configuration;
     }
-
     public IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,6 +28,7 @@ namespace aspnetapp
     {
 
       var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+
       services.AddAuthentication(options =>
         {
           options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,6 +38,7 @@ namespace aspnetapp
           options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
           options.Audience = Configuration["Auth0:Audience"];
         });
+
       services.AddDbContext<BackendContext>(options =>
           options.UseNpgsql(connectionString)
       );
@@ -56,9 +56,13 @@ namespace aspnetapp
       }
 
       app.UseHttpsRedirection();
+
       app.UseRouting();
+
       app.UseAuthentication();
+
       app.UseAuthorization();
+
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();

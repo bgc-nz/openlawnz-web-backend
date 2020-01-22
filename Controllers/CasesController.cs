@@ -11,49 +11,49 @@ namespace aspnetapp.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class FoldersController : ControllerBase
+  public class CasesController : ControllerBase
   {
     private readonly BackendContext _context;
 
-    public FoldersController(BackendContext context)
+    public CasesController(BackendContext context)
     {
       _context = context;
     }
 
-    // GET: api/Folders
+    // GET: api/Cases
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Folder>>> GetFolders()
+    public async Task<ActionResult<IEnumerable<LegalCase>>> GetCases()
     {
-      return await _context.Folders.Include(l => l.Cases).ToListAsync();
+      return await _context.Cases.ToListAsync();
     }
 
-    // GET: api/Folders/5
+    // GET: api/Cases/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Folder>> GetFolder(long id)
+    public async Task<ActionResult<LegalCase>> GetLegalCase(long id)
     {
-      var folder = await _context.Folders.FindAsync(id);
+      var legalCase = await _context.Cases.FindAsync(id);
 
-      if (folder == null)
+      if (legalCase == null)
       {
         return NotFound();
       }
 
-      return folder;
+      return legalCase;
     }
 
-    // PUT: api/Folders/5
+    // PUT: api/Cases/5
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for
     // more details see https://aka.ms/RazorPagesCRUD.
     [HttpPut("{id}")]
     [Authorize]
-    public async Task<IActionResult> PutFolder(long id, Folder folder)
+    public async Task<IActionResult> PutLegalCase(long id, LegalCase legalCase)
     {
-      if (id != folder.Id)
+      if (id != legalCase.Id)
       {
         return BadRequest();
       }
 
-      _context.Entry(folder).State = EntityState.Modified;
+      _context.Entry(legalCase).State = EntityState.Modified;
 
       try
       {
@@ -61,7 +61,7 @@ namespace aspnetapp.Controllers
       }
       catch (DbUpdateConcurrencyException)
       {
-        if (!FolderExists(id))
+        if (!LegalCaseExists(id))
         {
           return NotFound();
         }
@@ -74,39 +74,39 @@ namespace aspnetapp.Controllers
       return NoContent();
     }
 
-    // POST: api/Folders
+    // POST: api/Cases
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for
     // more details see https://aka.ms/RazorPagesCRUD.
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult<Folder>> PostFolder(Folder folder)
+    public async Task<ActionResult<LegalCase>> PostLegalCase(LegalCase legalCase)
     {
-      _context.Folders.Add(folder);
+      _context.Cases.Add(legalCase);
       await _context.SaveChangesAsync();
 
-      return CreatedAtAction("GetFolder", new { id = folder.Id }, folder);
+      return CreatedAtAction("GetLegalCase", new { id = legalCase.Id }, legalCase);
     }
 
-    // DELETE: api/Folders/5
+    // DELETE: api/Cases/5
     [HttpDelete("{id}")]
     [Authorize]
-    public async Task<ActionResult<Folder>> DeleteFolder(long id)
+    public async Task<ActionResult<LegalCase>> DeleteLegalCase(long id)
     {
-      var folder = await _context.Folders.FindAsync(id);
-      if (folder == null)
+      var legalCase = await _context.Cases.FindAsync(id);
+      if (legalCase == null)
       {
         return NotFound();
       }
 
-      _context.Folders.Remove(folder);
+      _context.Cases.Remove(legalCase);
       await _context.SaveChangesAsync();
 
-      return folder;
+      return legalCase;
     }
 
-    private bool FolderExists(long id)
+    private bool LegalCaseExists(long id)
     {
-      return _context.Folders.Any(e => e.Id == id);
+      return _context.Cases.Any(e => e.Id == id);
     }
   }
 }
